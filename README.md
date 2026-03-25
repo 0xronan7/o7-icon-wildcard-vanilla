@@ -1,19 +1,12 @@
 # @o7/icon Wildcard Export Bug
 
-**Affects:** Both Vite 7 (Rollup) AND Vite 8 (rolldown) - **production stable**
+**Affects:** Vite 8 (rolldown) - production stable
 
 ## Reproduction
 
 Minimal reproduction of wildcard exports resolution failure in @o7/icon package.
 
 ## Error
-
-### Vite 7 (Rollup)
-```
-✘ [ERROR] No known conditions for "./lucide/check.svelte" specifier in "@o7/icon" package
-```
-- ❌ Dev mode: fails
-- ❌ Build: fails
 
 ### Vite 8 (rolldown)
 ```
@@ -30,6 +23,10 @@ The `@o7/icon` package uses wildcard exports:
 ```json
 {
   "exports": {
+    "./lucide": {
+      "types": "./dist/lucide/index.d.ts",
+      "svelte": "./dist/lucide/index.js"
+    },
     "./lucide/*": {
       "types": "./dist/lucide/*.svelte.d.ts",
       "svelte": "./dist/lucide/*.svelte"
@@ -38,7 +35,7 @@ The `@o7/icon` package uses wildcard exports:
 }
 ```
 
-This pattern is **not resolved correctly by either bundler, in both dev and build modes**.
+This pattern **fails in Vite 8 (rolldown), in both dev and build modes**.
 
 ## Test Case
 
@@ -57,20 +54,13 @@ Use explicit paths without wildcard pattern:
 import CheckIcon from '@o7/icon/dist/lucide/check.svelte';
 ```
 
-Or the @o7/icon Vite plugin transforms barrel imports in dev mode, but production builds still fail.
-
 ## Reproduction Steps
 
 ```bash
-# Vite 7 test
-cd o7-icon-wildcard-vite7-test
-pnpm install
-pnpm build  # FAILS
-
-# Vite 8 test  
 cd o7-icon-wildcard-vanilla
 pnpm install
 pnpm build  # FAILS
+pnpm dev    # FAILS
 ```
 
 ## Expected Behavior
@@ -80,7 +70,7 @@ Wildcard exports should resolve:
 
 ## Actual Behavior
 
-Both Rollup (Vite 7) and rolldown (Vite 8) fail to resolve wildcard export patterns.
+Rolldown (Vite 8) fails to resolve wildcard export patterns in both dev and build modes.
 
 ## Related
 
