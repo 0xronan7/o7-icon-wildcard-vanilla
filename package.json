@@ -1,0 +1,15 @@
+{
+  "name": "rolldown-wildcard-vanilla",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "^8.0.0-beta.7"
+  },
+  "dependencies": {
+    "@o7/icon": "^0.3.79"
+  }
+}
